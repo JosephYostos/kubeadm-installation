@@ -14,7 +14,13 @@ sudo apt install -y \
           kubeadm=${K8SVERSION} \
           kubelet=${K8SVERSION} \
           kubectl=${K8SVERSION} 
-          
+
+# Install the necessary dependencies for containerd
+sudo apt install curl gnupg2 software-properties-common apt-transport-https ca-certificates -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
@@ -34,7 +40,7 @@ EOF
 sudo sysctl --system
 
 # Install containerd
-sudo apt-get update && sudo apt-get install -y containerd
+sudo apt-get install -y containerd.io
 
 # Configure containerd
 sudo mkdir -p /etc/containerd
